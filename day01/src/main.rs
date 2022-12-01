@@ -11,7 +11,8 @@ fn main() {
             .sum::<u32>();
         calories.push(val);
     }
+
     calories.sort();
-    println!("part 1: {}", calories.iter().max().unwrap());
-    println!("part 2: {}", calories.iter().rev().take(3).sum::<u32>());
+    println!("{}", calories.iter().max().unwrap());
+    println!("{}", calories.iter().rev().take(3).sum::<u32>());
 }
