@@ -2,8 +2,8 @@ use itertools::Itertools;
 
 fn calculate_priority(c: char) -> u32 {
     match c.is_ascii_lowercase() {
-        true => c as u32 - 96,
-        _ => c as u32 - 38,
+        true => 1 + c as u32 - 'a' as u32,
+        _ => 27 + c as u32 - 'A' as u32,
     }
 }
 
