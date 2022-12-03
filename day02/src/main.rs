@@ -32,11 +32,12 @@ impl From<&str> for HandResult {
     }
 }
 
-trait Beats {
+trait Hierarchy {
     fn beats(&self) -> Self;
+    fn beaten_by(&self) -> Self;
 }
 
-impl Beats for Hand {
+impl Hierarchy for Hand {
     fn beats(&self) -> Self {
         match self {
             Self::Rock => Self::Scissors,
@@ -44,11 +45,19 @@ impl Beats for Hand {
             Self::Scissors => Self::Paper,
         }
     }
+
+    fn beaten_by(&self) -> Self {
+        match self {
+            Self::Rock => Self::Paper,
+            Self::Paper => Self::Scissors,
+            Self::Scissors => Self::Rock,
+        }
+    }
 }
 
 fn main() {
     let input = include_str!("../input.txt");
-    let rounds: Vec<&str> = input.split('\n').collect();
+    let rounds: Vec<&str> = input.lines().collect();
     let mut score = 0;
     // 01
     for round in &rounds {
@@ -67,8 +76,7 @@ fn main() {
     score = 0;
     for round in rounds {
         let values: Vec<&str> = round.split(' ').collect();
-        let opponent = Hand::from(values[0]);
-        let needed_outcome = HandResult::from(values[1]);
+        let (opponent, needed_outcome) = (Hand::from(values[0]), HandResult::from(values[1]));
         let own = calculate_hand(opponent, needed_outcome);
         let res = play_hand(opponent, own);
         match res {
@@ -94,10 +102,6 @@ fn calculate_hand(opponent: Hand, outcome: HandResult) -> Hand {
     match outcome {
         HandResult::Draw => opponent,
         HandResult::Lose => opponent.beats(),
-        HandResult::Win => match opponent {
-            Hand::Rock => Hand::Paper,
-            Hand::Paper => Hand::Scissors,
-            Hand::Scissors => Hand::Rock,
-        },
+        HandResult::Win => opponent.beaten_by(),
     }
 }

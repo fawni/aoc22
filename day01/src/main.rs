@@ -5,7 +5,7 @@ fn main() {
 
     for elf in elves {
         let val = elf
-            .split('\n')
+            .lines()
             .filter(|s| !s.is_empty())
             .map(|n| n.parse::<u32>().unwrap())
             .sum::<u32>();
