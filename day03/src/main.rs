@@ -22,7 +22,7 @@ fn main() {
     let part2 = chunks
         .into_iter()
         .filter_map(|chunk| {
-            let v: Vec<&str> = chunk.collect();
+            let v = chunk.collect::<Vec<&str>>();
             v[0].chars()
                 .filter(|c| v[1].contains(*c))
                 .find(|c| v[2].contains(*c))

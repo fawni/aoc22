@@ -57,11 +57,11 @@ impl Hierarchy for Hand {
 
 fn main() {
     let input = include_str!("../input.txt");
-    let rounds: Vec<&str> = input.lines().collect();
+    let rounds = input.lines().collect::<Vec<&str>>();
     let mut score = 0;
     // 01
     for round in &rounds {
-        let hands: Vec<&str> = round.split(' ').collect();
+        let hands = round.split(' ').collect::<Vec<&str>>();
         let (opponent, own) = (Hand::from(hands[0]), Hand::from(hands[1]));
         let res = play_hand(opponent, own);
         match res {
@@ -75,7 +75,7 @@ fn main() {
     //02
     score = 0;
     for round in rounds {
-        let values: Vec<&str> = round.split(' ').collect();
+        let values = round.split(' ').collect::<Vec<&str>>();
         let (opponent, needed_outcome) = (Hand::from(values[0]), HandResult::from(values[1]));
         let own = calculate_hand(opponent, needed_outcome);
         let res = play_hand(opponent, own);
