@@ -13,12 +13,10 @@ fn main() {
     let (mut contains, mut overlaps) = (0, 0);
     for line in input.lines() {
         let v = line
-            .split(',')
-            .flat_map(|s| s.split('-'))
+            .split(&[',', '-'])
             .flat_map(|s| s.parse::<u32>())
             .collect::<Vec<u32>>();
-        let r1 = v[0]..=v[1];
-        let r2 = v[2]..=v[3];
+        let (r1, r2) = (v[0]..=v[1], v[2]..=v[3]);
         if range_contains(&r1, v[2], v[3]) || range_contains(&r2, v[0], v[1]) {
             contains += 1
         }
