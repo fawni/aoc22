@@ -10,8 +10,8 @@ _default:
 
 # Get the output of a day
 @run DAY:
-    cd day{{DAY}} && cargo run -q
+    cargo run -q --manifest-path ./day{{DAY}}/Cargo.toml
 
 # Run clippy on a day
 @check DAY:
-    cd day{{DAY}} && cargo clippy
+    cargo clippy --manifest-path ./day{{DAY}}/Cargo.toml
