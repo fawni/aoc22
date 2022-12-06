@@ -2,10 +2,11 @@ use std::collections::HashSet;
 
 fn find_unique(chars: &Vec<char>, marker: usize) -> usize {
     for idx in 0..chars.len() {
-        let mut buffer: HashSet<char> = HashSet::new();
-        for char in chars.iter().skip(idx).take(marker) {
-            buffer.insert(*char);
-        }
+        let buffer = chars
+            .iter()
+            .skip(idx)
+            .take(marker)
+            .collect::<HashSet<&char>>();
         if buffer.len() == marker {
             return idx + marker;
         }
