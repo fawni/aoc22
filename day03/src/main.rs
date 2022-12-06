@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 fn calculate_priority(c: char) -> u32 {
     match c.is_ascii_lowercase() {
         true => 1 + c as u32 - 'a' as u32,
@@ -9,7 +7,7 @@ fn calculate_priority(c: char) -> u32 {
 
 fn main() {
     let input = include_str!("../input.txt");
-    let chunks = input.lines().chunks(3);
+    let lines = input.lines().collect::<Vec<&str>>();
 
     let part1 = input
         .lines()
@@ -19,13 +17,15 @@ fn main() {
         })
         .fold(0, |acc, c| acc + calculate_priority(c));
 
-    let part2 = chunks
-        .into_iter()
-        .filter_map(|chunk| {
-            let v = chunk.collect::<Vec<&str>>();
-            v[0].chars()
-                .filter(|c| v[1].contains(*c))
-                .find(|c| v[2].contains(*c))
+    let part2 = input
+        .lines()
+        .enumerate()
+        .step_by(3)
+        .filter_map(|(idx, _)| {
+            lines[idx]
+                .chars()
+                .filter(|c| lines[idx + 1].contains(*c))
+                .find(|c| lines[idx + 2].contains(*c))
         })
         .fold(0, |acc, c| acc + calculate_priority(c));
 
