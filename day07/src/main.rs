@@ -36,19 +36,19 @@ fn main() {
             "$ cd /" => current = 0,
             "$ cd .." => current = dirs[current].parent.unwrap(),
             "$ ls" => continue,
+            _ if line.starts_with("$ cd ") => {
+                current = dirs[current].children[line.strip_prefix("$ cd ").unwrap()];
+            }
+            _ if line.starts_with("dir ") => {
+                let dir = dirs.len();
+                dirs.push(Directory::new(Some(current)));
+                dirs[current]
+                    .children
+                    .insert(line.strip_prefix("dir ").unwrap(), dir);
+            }
             _ => {
-                if line.starts_with("$ cd ") {
-                    current = dirs[current].children[line.strip_prefix("$ cd ").unwrap()];
-                } else if line.starts_with("dir ") {
-                    let dir = dirs.len();
-                    dirs.push(Directory::new(Some(current)));
-                    dirs[current]
-                        .children
-                        .insert(line.strip_prefix("dir ").unwrap(), dir);
-                } else {
-                    let (size, _) = line.split_once(' ').unwrap();
-                    dirs[current].size += size.parse::<usize>().unwrap();
-                }
+                let (size, _) = line.split_once(' ').unwrap();
+                dirs[current].size += size.parse::<usize>().unwrap();
             }
         }
     }
