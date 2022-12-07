@@ -38,17 +38,13 @@ fn main() {
             "$ ls" => continue,
             _ => {
                 if line.starts_with("$ cd ") {
-                    {
-                        current = dirs[current].children[line.strip_prefix("$ cd ").unwrap()];
-                    }
+                    current = dirs[current].children[line.strip_prefix("$ cd ").unwrap()];
                 } else if line.starts_with("dir ") {
-                    {
-                        let dir = dirs.len();
-                        dirs.push(Directory::new(Some(current)));
-                        dirs[current]
-                            .children
-                            .insert(line.strip_prefix("dir ").unwrap(), dir);
-                    }
+                    let dir = dirs.len();
+                    dirs.push(Directory::new(Some(current)));
+                    dirs[current]
+                        .children
+                        .insert(line.strip_prefix("dir ").unwrap(), dir);
                 } else {
                     let (size, _) = line.split_once(' ').unwrap();
                     dirs[current].size += size.parse::<usize>().unwrap();
