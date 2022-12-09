@@ -10,14 +10,7 @@ impl Tree {
         Self { height, x, y }
     }
 
-    fn is_visible(&self, input: &str) -> bool {
-        let size = input.lines().count() - 1;
-        let chars = input
-            .chars()
-            .filter(|c| !c.is_whitespace())
-            .map(|c| c.to_string().parse::<u32>().unwrap())
-            .collect::<Vec<u32>>();
-
+    fn is_visible(&self, chars: &[u32], size: usize) -> bool {
         let by_x = |x: usize| chars[x + (1 + size) * self.y] < self.height;
         let by_y = |y: usize| chars[self.x + (1 + size) * y] < self.height;
 
@@ -27,14 +20,7 @@ impl Tree {
             || (self.y + 1..=size).all(by_y)
     }
 
-    fn scenic_score(&self, input: &str) -> usize {
-        let size = input.lines().count() - 1;
-        let chars = input
-            .chars()
-            .filter(|c| !c.is_whitespace())
-            .map(|c| c.to_string().parse::<u32>().unwrap())
-            .collect::<Vec<u32>>();
-
+    fn scenic_score(&self, chars: &[u32], size: usize) -> usize {
         let by_x = |&x: &usize| chars[x + (1 + size) * self.y] >= self.height;
         let by_y = |&y: &usize| chars[self.x + (1 + size) * y] >= self.height;
 
@@ -64,9 +50,20 @@ fn parse_trees(input: &str) -> Vec<Tree> {
 
 fn main() {
     let input = include_str!("../input.txt");
+    let size = input.lines().count() - 1;
+    let chars = input
+        .chars()
+        .filter(|c| !c.is_whitespace())
+        .map(|c| c.to_string().parse::<u32>().unwrap())
+        .collect::<Vec<u32>>();
     let trees = parse_trees(input);
-    let sum = trees.iter().filter(|t| t.is_visible(input)).count();
-    let scenic = trees.iter().map(|t| t.scenic_score(input)).max().unwrap();
+
+    let sum = trees.iter().filter(|t| t.is_visible(&chars, size)).count();
+    let scenic = trees
+        .iter()
+        .map(|t| t.scenic_score(&chars, size))
+        .max()
+        .unwrap();
 
     println!("{sum}");
     println!("{scenic}");
