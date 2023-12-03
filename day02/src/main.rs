@@ -5,6 +5,24 @@ enum Hand {
     Scissors,
 }
 
+impl Hand {
+    fn beats(&self) -> Self {
+        match self {
+            Self::Rock => Self::Scissors,
+            Self::Paper => Self::Rock,
+            Self::Scissors => Self::Paper,
+        }
+    }
+
+    fn beaten_by(&self) -> Self {
+        match self {
+            Self::Rock => Self::Paper,
+            Self::Paper => Self::Scissors,
+            Self::Scissors => Self::Rock,
+        }
+    }
+}
+
 impl From<&str> for Hand {
     fn from(s: &str) -> Self {
         match s {
@@ -32,26 +50,21 @@ impl From<&str> for HandResult {
     }
 }
 
-trait Hierarchy {
-    fn beats(&self) -> Self;
-    fn beaten_by(&self) -> Self;
+fn play_hand(opponent: Hand, own: Hand) -> HandResult {
+    if own.beats() == opponent {
+        HandResult::Win
+    } else if opponent.beats() == own {
+        HandResult::Lose
+    } else {
+        HandResult::Draw
+    }
 }
 
-impl Hierarchy for Hand {
-    fn beats(&self) -> Self {
-        match self {
-            Self::Rock => Self::Scissors,
-            Self::Paper => Self::Rock,
-            Self::Scissors => Self::Paper,
-        }
-    }
-
-    fn beaten_by(&self) -> Self {
-        match self {
-            Self::Rock => Self::Paper,
-            Self::Paper => Self::Scissors,
-            Self::Scissors => Self::Rock,
-        }
+fn calculate_hand(opponent: Hand, outcome: HandResult) -> Hand {
+    match outcome {
+        HandResult::Draw => opponent,
+        HandResult::Lose => opponent.beats(),
+        HandResult::Win => opponent.beaten_by(),
     }
 }
 
@@ -86,22 +99,4 @@ fn main() {
         }
     }
     println!("{score}");
-}
-
-fn play_hand(opponent: Hand, own: Hand) -> HandResult {
-    if own.beats() == opponent {
-        HandResult::Win
-    } else if opponent.beats() == own {
-        HandResult::Lose
-    } else {
-        HandResult::Draw
-    }
-}
-
-fn calculate_hand(opponent: Hand, outcome: HandResult) -> Hand {
-    match outcome {
-        HandResult::Draw => opponent,
-        HandResult::Lose => opponent.beats(),
-        HandResult::Win => opponent.beaten_by(),
-    }
 }
